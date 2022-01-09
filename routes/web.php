@@ -1,5 +1,8 @@
 <?php
 
+use App\Mail\SendMail;
+
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UploadPostCotroller;
 
@@ -30,6 +33,13 @@ Route::post('updatepost', [UploadPostCotroller::class,'updatepost']);
 
 Route::get('deletepost/{id}', [UploadPostCotroller::class,'deletepost']);
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('admin.dashboard');
+Route::view('admindashboard', 'admin.dashboard')->name('verified');
+
+Route::get('mail', function (){
+    Mail::to('jagadees1993@gmail.com')->send(new SendMail());
 });
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
+

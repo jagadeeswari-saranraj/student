@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use Auth;
+use App\Models\User;
 
 class UploadPostCotroller extends Controller
 {
     public function save(Request $request) {
+
         $request->validate([
             'title' => 'required',
             'image' =>  'required',
@@ -23,7 +26,7 @@ class UploadPostCotroller extends Controller
         $post->Title=$request->title;
         $post->Image=$imageName;
         $post->Description=$request->description;
-
+        $post->user_id=Auth::id();
         $post->save();
 
         return redirect()->back()->with('message', 'file added successfully');
@@ -32,7 +35,7 @@ class UploadPostCotroller extends Controller
 
     public function list()
     {
-        $posts = Post::get();
+        $posts = Post::with('user')->get();
         return view('admin.list-post', compact('posts'));
     }
 
